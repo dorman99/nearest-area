@@ -23,5 +23,6 @@ func main() {
 	app := gin.Default()
 	r := app.Group("/app/v1")
 	r.Handle(http.MethodPost, "/addresses", addressController.Insert)
+	r.Handle(http.MethodPost, "/addresses/nearest", addressController.FindNearestArea)
 	app.Run()
 }

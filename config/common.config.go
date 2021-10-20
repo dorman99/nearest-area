@@ -12,7 +12,7 @@ func GetDatabaseConfig() *databaseConfig {
 	return &databaseConfig{
 		Host:     "localhost",
 		User:     "postgres",
-		Port:     5432,
+		Port:     5435,
 		Password: "password",
 		Database: "postgres",
 	}

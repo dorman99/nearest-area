@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+
 	"github.com/dorman99/area-scan/dto"
 	"github.com/dorman99/area-scan/entity"
 	"gorm.io/gorm"
@@ -9,7 +11,7 @@ import (
 type AddressModel interface {
 	Insert(insertDto dto.InsertAddressDto) (*entity.AddressEntity, error)
 	Find()
-	FindOthersNearest()
+	FindOthersNearest(lat float32, long float32) ([]entity.AddressEntity, error)
 }
 
 type addressModel struct {
@@ -30,6 +32,7 @@ func (m *addressModel) Insert(insertDto dto.InsertAddressDto) (*entity.AddressEn
 		Full_Address: insertDto.FullAddress,
 		Provience:    insertDto.Provience,
 		City:         insertDto.City,
+		Point:        fmt.Sprintf("(%f, %f)", insertDto.Lat, insertDto.Long),
 	}
 	ress := m.connection.Create(inserted)
 	if ress.Error != nil {
@@ -38,5 +41,13 @@ func (m *addressModel) Insert(insertDto dto.InsertAddressDto) (*entity.AddressEn
 	return inserted, nil
 }
 
-func (m *addressModel) Find()              {}
-func (m *addressModel) FindOthersNearest() {}
+func (m *addressModel) Find() {}
+func (m *addressModel) FindOthersNearest(lat float32, long float32) ([]entity.AddressEntity, error) {
+	var addresses []entity.AddressEntity
+	wq := fmt.Sprintf("distance(%f, %f, lat, long) * 1000 < 10000", lat, long)
+	ress := m.connection.Find(&addresses, wq)
+	if ress.Error != nil {
+		return nil, ress.Error
+	}
+	return addresses, nil
+}

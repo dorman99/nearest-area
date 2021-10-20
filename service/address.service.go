@@ -9,7 +9,7 @@ import (
 type AddressService interface {
 	Insert(insertDto dto.InsertAddressDto) (*entity.AddressEntity, error)
 	Find()
-	FindNearestArea()
+	FindNearestArea(lat float32, long float32) ([]entity.AddressEntity, error)
 }
 
 type addressService struct {
@@ -26,5 +26,8 @@ func (s *addressService) Insert(insertDto dto.InsertAddressDto) (*entity.Address
 	return s.addressModel.Insert(insertDto)
 }
 
-func (s *addressService) Find()            {}
-func (s *addressService) FindNearestArea() {}
+func (s *addressService) Find() {}
+
+func (s *addressService) FindNearestArea(lat float32, long float32) ([]entity.AddressEntity, error) {
+	return s.addressModel.FindOthersNearest(lat, long)
+}

@@ -44,4 +44,20 @@ func (c *addressController) Insert(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
-func (c *addressController) FindNearestArea(ctx *gin.Context) {}
+func (c *addressController) FindNearestArea(ctx *gin.Context) {
+	var findNearestDto dto.FindNearestDto
+	errDto := ctx.ShouldBind(&findNearestDto)
+	if errDto != nil {
+		response := commoon.FailedResponse("bad request", errDto.Error(), nil)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
+	}
+	results, err := c.addressService.FindNearestArea(findNearestDto.Lat, findNearestDto.Long)
+	if err != nil {
+		response := commoon.FailedResponse("bad request", errDto.Error(), nil)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
+	}
+	response := commoon.SuccessResponse(true, "success", results)
+	ctx.JSON(http.StatusOK, response)
+}
