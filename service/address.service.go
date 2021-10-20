@@ -7,7 +7,7 @@ import (
 )
 
 type AddressService interface {
-	Insert(insertDto dto.InsertAddressDto) (entity.AddressEntity, error)
+	Insert(insertDto dto.InsertAddressDto) (*entity.AddressEntity, error)
 	Find()
 	FindNearestArea()
 }
@@ -22,7 +22,7 @@ func NewAddressService(addressModel model.AddressModel) AddressService {
 	}
 }
 
-func (s *addressService) Insert(insertDto dto.InsertAddressDto) (entity.AddressEntity, error) {
+func (s *addressService) Insert(insertDto dto.InsertAddressDto) (*entity.AddressEntity, error) {
 	return s.addressModel.Insert(insertDto)
 }
 

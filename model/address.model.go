@@ -7,7 +7,7 @@ import (
 )
 
 type AddressModel interface {
-	Insert(insertDto dto.InsertAddressDto) (entity.AddressEntity, error)
+	Insert(insertDto dto.InsertAddressDto) (*entity.AddressEntity, error)
 	Find()
 	FindOthersNearest()
 }
@@ -22,9 +22,16 @@ func NewAddressModel(db *gorm.DB) AddressModel {
 	}
 }
 
-func (m *addressModel) Insert(insertDto dto.InsertAddressDto) (entity.AddressEntity, error) {
-	var inserted entity.AddressEntity
-	ress := m.connection.Save(insertDto).Take(&inserted)
+func (m *addressModel) Insert(insertDto dto.InsertAddressDto) (*entity.AddressEntity, error) {
+	inserted := &entity.AddressEntity{
+		Username:     insertDto.Username,
+		Lat:          insertDto.Lat,
+		Long:         insertDto.Long,
+		Full_Address: insertDto.FullAddress,
+		Provience:    insertDto.Provience,
+		City:         insertDto.City,
+	}
+	ress := m.connection.Create(inserted)
 	if ress.Error != nil {
 		return inserted, ress.Error
 	}

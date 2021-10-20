@@ -1,3 +1,3 @@
 # nearest-area
 
-### simple app to search user with area
+### simple app to search user within area
